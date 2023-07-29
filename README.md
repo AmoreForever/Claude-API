@@ -46,13 +46,13 @@ To use the Claude AI Unofficial API, you can either clone the GitHub repository 
 
 Terminal :
 
-    pip install claude-api
+    pip install aioclaude-api
     
 or
 
 Clone the repository:
 
-    git clone https://github.com/KoushikNavuluri/Claude-API.git
+    git clone https://github.com/AmoreForever/Claude-API.git
 
 ## Usage
 
