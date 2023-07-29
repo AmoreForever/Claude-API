@@ -2,10 +2,10 @@ import os
 from claude_api import Client
 
 def get_cookie():
-    cookie = os.environ.get('cookie')
-    if not cookie:
+    if cookie := os.environ.get('cookie'):
+        return cookie
+    else:
         raise ValueError("Please set the 'cookie' environment variable.")
-    return cookie
 
 def main():
     cookie = get_cookie()

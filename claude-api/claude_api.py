@@ -28,9 +28,7 @@ class Client:
 
     response = requests.request("GET", url, headers=headers)
     res = json.loads(response.text)
-    uuid = res[0]['uuid']
-
-    return uuid
+    return res[0]['uuid']
 
   def get_content_type(self, file_path):
     # Function to determine content type based on file extension
@@ -78,8 +76,7 @@ class Client:
     # Upload attachment if provided
     attachments = []
     if attachment:
-      attachment_response = self.upload_attachment(attachment)
-      if attachment_response:
+      if attachment_response := self.upload_attachment(attachment):
         attachments = [attachment_response]
       else:
         return {"Error: Invalid file format. Please try again."}
@@ -121,10 +118,7 @@ class Client:
     decoded_data = response.content.decode("utf-8")
     data = decoded_data.strip().split('\n')[-1]
 
-    answer = {"answer": json.loads(data[6:])['completion']}['answer']
-
-    # Returns answer
-    return answer
+    return {"answer": json.loads(data[6:])['completion']}['answer']
 
   # Deletes the conversation
   def delete_conversation(self, conversation_id):
@@ -150,10 +144,7 @@ class Client:
     response = requests.request("DELETE", url, headers=headers, data=payload)
 
     # Returns True if deleted or False if any error in deleting
-    if response.status_code == 204:
-      return True
-    else:
-      return False
+    return response.status_code == 204
 
   # Returns all the messages in conversation
   def chat_conversation_history(self, conversation_id):
@@ -181,8 +172,7 @@ class Client:
   def generate_uuid(self):
     random_uuid = uuid.uuid4()
     random_uuid_str = str(random_uuid)
-    formatted_uuid = f"{random_uuid_str[0:8]}-{random_uuid_str[9:13]}-{random_uuid_str[14:18]}-{random_uuid_str[19:23]}-{random_uuid_str[24:]}"
-    return formatted_uuid
+    return f"{random_uuid_str[:8]}-{random_uuid_str[9:13]}-{random_uuid_str[14:18]}-{random_uuid_str[19:23]}-{random_uuid_str[24:]}"
 
   def create_new_chat(self):
     url = f"https://claude.ai/api/organizations/{self.organization_id}/chat_conversations"
@@ -245,10 +235,7 @@ class Client:
     }
 
     response = requests.post(url, headers=headers, files=files)
-    if response.status_code == 200:
-      return response.json()
-    else:
-      return False
+    return response.json() if response.status_code == 200 else False
       
 
     
@@ -278,8 +265,5 @@ class Client:
 
     response = requests.request("POST", url, headers=headers, data=payload)
 
-    if response.status_code == 200:
-      return True
-    else:
-      return False
+    return response.status_code == 200
       
