@@ -7,7 +7,7 @@ long_description = (base_path / "README.md").read_text()
 
 setup(
     name="aioclaude-api",
-    version="1.0.12",
+    version="1.0.14",
     author="Hikamoru",
     license="MIT",
     author_email="me.thefarkhodov@gmail.com",
@@ -27,7 +27,7 @@ setup(
         "Operating System :: Microsoft :: Windows",
     ],
     package_dir={"": "aioclaude-api"},
-    py_modules=["claude_api"],
+    py_modules=["aioclaude_api"],
     keywords=[
         "claude",
         "ai",

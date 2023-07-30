@@ -29,9 +29,7 @@ class AIOclient:
 
         response = requests.request("GET", url, headers=headers)
         res = json.loads(response.text)
-        uuid = res[0]["uuid"]
-
-        return uuid
+        return res[0]["uuid"]
 
     def get_content_type(self, file_path):
         extension = os.path.splitext(file_path)[-1].lower()
@@ -62,8 +60,8 @@ class AIOclient:
         }
 
         async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get(url) as response:
-                return await response.json()
+            async with session.get(url, headers=headers) as response:
+                return await response.json(content_type="text/html")
 
     async def send_message(self, prompt, conversation_id, attachment=None):
         url = "https://claude.ai/api/append_message"
