@@ -5,6 +5,7 @@ import requests
 import json
 import os
 import uuid
+import re
 
 
 class AIOclient:
@@ -108,15 +109,23 @@ class AIOclient:
             "TE": "trailers",
         }
 
-        async with aiohttp.ClientSession(headers=headers) as session:
+        async with aiohttp.ClientSession() as session:
             async with session.post(
-                url, data=payload, raise_for_status=True
+                url, data=payload, raise_for_status=True, headers=headers
             ) as response:
-                decoded_data = await response.text()
-                data = decoded_data.strip().split("\n")[-1]
-                answer = {"answer": json.loads(data[6:])["completion"]}["answer"]
+                decoded_data = await response.read()
+                decoded_data = re.sub('\n+', '\n', decoded_data.decode('utf-8')).strip()
+                data_strings = decoded_data.split('\n')
+                completions = []
+                for data_string in data_strings:
+                    json_str = data_string[6:].strip()
+                    data = json.loads(json_str)
+                    if 'completion' in data:
+                        completions.append(data['completion'])
 
-        return answer
+                answer = ''.join(completions)
+
+            return answer
 
     async def delete_conversation(self, conversation_id):
         url = f"https://claude.ai/api/organizations/{self.organization_id}/chat_conversations/{conversation_id}"
@@ -133,7 +142,7 @@ class AIOclient:
             "Sec-Fetch-Mode": "cors",
             "Sec-Fetch-Site": "same-origin",
             "Connection": "keep-alive",
-            "Cookie": f"{self.cookie}",
+           "Cookie": f"{self.cookie}",
             "TE": "trailers",
         }
 
@@ -192,7 +201,7 @@ class AIOclient:
 
         async with aiohttp.ClientSession() as session:
             async with session.post(url, data=payload, headers=headers) as response:
-                    return await response.json(content_type='text/html')
+                    return await response.json()
                 
 
     async def reset_all(self):
