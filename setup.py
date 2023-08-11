@@ -7,7 +7,7 @@ long_description = (base_path / "README.md").read_text()
 
 setup(
     name="aioclaude-api",
-    version="1.0.20",
+    version="1.0.22",
     author="Hikamoru",
     license="MIT",
     author_email="me.thefarkhodov@gmail.com",

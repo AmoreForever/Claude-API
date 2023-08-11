@@ -45,7 +45,7 @@ class AIOclient:
 
     async def list_all_conversations(self):
         url = (
-            f"https://claude.ai/api/organizations/{self.organization_id}/conversations"
+            f"https://claude.ai/api/organizations/{self.organization_id}/chat_conversations"
         )
 
         headers = {
@@ -60,9 +60,9 @@ class AIOclient:
             "Cookie": f"{self.cookie}",
         }
 
-        async with aiohttp.ClientSession(headers=headers) as session:
+        async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as response:
-                return await response.json(content_type="text/html")
+                return await response.json()
 
     async def send_message(self, prompt, conversation_id, attachment=None):
         url = "https://claude.ai/api/append_message"
@@ -237,7 +237,7 @@ class AIOclient:
 
         async with aiohttp.ClientSession() as session:
             async with session.post(url, data=files, headers=headers) as response:
-                return await response.json(content_type='text/html')
+                return await response.json()
 
     async def rename_chat(self, title, conversation_id):
         url = "https://claude.ai/api/rename_chat"
